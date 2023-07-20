@@ -6,7 +6,6 @@ Uma vez que o passo anterior for concluído, vamos realizar o processo do setup 
 ```ruby
 dotnet restore
 dotnet build
-dotnet run
 ```
 Ao finalizar, entraremos no diretório ClientApp para realizar o setup do front-end.
 ```ruby
