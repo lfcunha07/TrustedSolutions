@@ -6,7 +6,12 @@ export class Tabela extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { githubInfoList: [], loading: true };
+    this.state = {
+      githubInfoList: [],
+      filteredList: [],
+      loading: true,
+      searchQuery: '',
+    };
   }
 
   componentDidMount() {
@@ -34,14 +39,36 @@ export class Tabela extends Component {
     );
   }
 
-  render() {
-    const { loading, githubInfoList } = this.state;
+  handleSearchChange = (event) => {
+    const searchQuery = event.target.value;
+    this.setState({ searchQuery }, () => {
+      this.filterGithubInfoList();
+    });
+  };
 
-    let contents = loading ? <p><em>Loading...</em></p> : Tabela.renderGithubInfoTable(githubInfoList);
+  filterGithubInfoList = () => {
+    const { githubInfoList, searchQuery } = this.state;
+    const filteredList = githubInfoList.filter(
+      (githubInfo) =>
+        githubInfo.id.toString().includes(searchQuery) ||
+        githubInfo.login.includes(searchQuery)
+    );
+    this.setState({ filteredList });
+  };
+
+  render() {
+    const { loading, filteredList } = this.state;
+
+    let contents = loading ? <p><em>Loading...</em></p> : Tabela.renderGithubInfoTable(filteredList);
 
     return (
       <div>
         <h1 id="tableLabel">Tabela de Usuários</h1>
+        <input
+          type="text"
+          placeholder="Procurar por ID ou Usuário"
+          onChange={this.handleSearchChange}
+        />
         <p>Abaixo, podemos ver os usuários já presentes no nosso banco de dados.</p>
         {contents}
       </div>
@@ -52,9 +79,9 @@ export class Tabela extends Component {
     try {
       const response = await axios.get('https://localhost:7005/api/GithubInfo/GetInfo');
       console.log(response);
-      this.setState({ githubInfoList: response.data, loading: false });
+      this.setState({ githubInfoList: response.data, filteredList: response.data, loading: false });
     } catch (error) {
       console.error('Error fetching GithubInfo:', error);
     }
-  }  
+  }
 }
