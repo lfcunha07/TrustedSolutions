@@ -64,12 +64,12 @@ export class Tabela extends Component {
     return (
       <div>
         <h1 id="tableLabel">Tabela de Usuários</h1>
+        <p>Abaixo, podemos ver os usuários já presentes no nosso banco de dados.</p>
         <input
           type="text"
           placeholder="Procurar por ID ou Usuário"
           onChange={this.handleSearchChange}
         />
-        <p>Abaixo, podemos ver os usuários já presentes no nosso banco de dados.</p>
         {contents}
       </div>
     );
